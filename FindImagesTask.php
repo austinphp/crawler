@@ -4,7 +4,7 @@ class FindImagesTask implements CrawlTaskInterface
 {
     protected $images = array();
     
-    public function task(Zend_Http_Response $response)
+    public function task(Zend_Http_Response $response, Zend_Http_Client $client)
     {
         $query = new Zend_Dom_Query($response->getBody());
         $images = $query->query('img');

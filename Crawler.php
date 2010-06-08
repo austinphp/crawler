@@ -24,7 +24,9 @@ class Crawler
         $this->queue = new Queue();
         $this->queue->push($startFrom);    
         $this->client = new Zend_Http_Client();
-        $this->domain = parse_url($startFrom, PHP_URL_HOST);
+        $this->domain = parse_url($startFrom, PHP_URL_HOST); 
+        
+
     }
     
     public function registerTask(CrawlTaskInterface $crawlTask)
@@ -39,6 +41,9 @@ class Crawler
     
     public function run()
     {
+        if ($this->debugMode) {
+            echo "Restricting crawl to $this->domain\n";
+        }
         while (!$this->queue->isEmpty()) {
             $url = $this->queue->pop();
             
@@ -61,13 +66,17 @@ class Crawler
             foreach ($links as $link) {
                 $href = $link->getAttribute('href');
                 $urlparts = parse_url($href);
-                if ($this->stayOnDomain && $urlparts["host"] != $this->domain) {
+
+                if ($this->stayOnDomain && isset($urlparts["host"]) && $urlparts["host"] != $this->domain) {
                     continue;
+                }
+                if (!isset($urlparts["host"])) {
+                    $href = 'http://' . $this->domain . $href;  //this is a really naive way of doing this!
                 }
                 $this->queue->push($href);
             }
             foreach ($this->tasks as $task) {
-                $task->task($this->currentResponse);
+                $task->task($this->currentResponse, $this->client);
             }
         }
         $this->shutdownTasks();
