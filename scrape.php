@@ -8,10 +8,9 @@ require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance();
 
 
-$startFrom = 'http://www.vertive.com/';
+$startFrom = 'http://www.joshbutts.com/';
 
 $crawler = new Crawler($startFrom);
-$crawler->registerTask(new FindImagesTask());
 $crawler->registerTask(new AverageResponseTimeTask());
 $crawler->setDebugMode(true);
 $crawler->run();

@@ -8,13 +8,14 @@ class AverageResponseTimeTask implements CrawlTaskInterface
     public function task(Zend_Http_Response $response, Zend_Http_Client $client)
     {
         $timerStart = microtime(true);
-        Zend_Debug::dump($client->getUri());
-        $timerEnd = micotime(true);
-        die;
+        get_headers($client->getUri());
+        $timerEnd = microtime(true);
+        $this->totalPages++;
+        $this->totalTime += ($timerEnd - $timerStart);
     }
     
     public function shutdown()
     {
         echo "Average Response Time: " . ($this->totalTime / $this->totalPages) . " seconds\n";
     }
-}
+} 
