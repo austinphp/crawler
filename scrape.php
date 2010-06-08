@@ -11,6 +11,5 @@ Zend_Loader_Autoloader::getInstance();
 $startFrom = 'http://www.joshbutts.com/';
 
 $crawler = new Crawler($startFrom);
-$crawler->registerTask(new AverageResponseTimeTask());
 $crawler->setDebugMode(true);
 $crawler->run();
