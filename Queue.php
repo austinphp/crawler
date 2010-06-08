@@ -17,6 +17,11 @@ class Queue
         return count($this->toVisit) == 0;
     }
     
+    public function queueLength()
+    {
+        return count($this->toVisit);
+    }
+    
     public function pop()
     {
         return array_pop($this->toVisit);

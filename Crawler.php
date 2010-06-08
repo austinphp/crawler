@@ -43,6 +43,7 @@ class Crawler
             $url = $this->queue->pop();
             
             if ($this->debugMode) {
+                echo "Queue Length: " . $this->queue->queueLength() . "\n";
                 echo "Crawling " . $url . "\n";
             }
             
@@ -60,8 +61,22 @@ class Crawler
             foreach ($links as $link) {
                 $href = $link->getAttribute('href');
                 $urlparts = parse_url($href);
-                if ($this->stayOnDomain)
+                if ($this->stayOnDomain && $urlparts["host"] != $this->domain) {
+                    continue;
+                }
+                $this->queue->push($href);
             }
+            foreach ($this->tasks as $task) {
+                $task->task($this->currentResponse);
+            }
+        }
+        $this->shutdownTasks();
+    }
+    
+    public function shutdownTasks()
+    {
+        foreach  ($this->tasks as $task) {
+            $task->shutdown();
         }
     }
 }

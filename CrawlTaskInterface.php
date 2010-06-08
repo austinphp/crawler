@@ -1,5 +1,6 @@
 <?php
 interface CrawlTaskInterface
 {
-    public function task($html, $cookies, $headers);
+    function task(Zend_Http_Response $response);
+    function shutdown();
 }
