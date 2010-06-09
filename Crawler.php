@@ -8,6 +8,8 @@ class Crawler
     protected $tasks = array();
     protected $debugMode;
     protected $domain;
+    protected $limit;
+    protected $counter;
     
     /**
      * @var Zend_Http_Response
@@ -39,12 +41,35 @@ class Crawler
         $this->debugMode = $val;
     }
     
+    public function setQueue(Queue $queue)
+    {
+    	$this->queue = $queue;
+    }
+    
+    public function getQueue()
+    {
+    	return $this->queue;
+    }
+    
+    public function setLimit($num)
+    {
+    	$this->limit = $num;
+    }
+    
     public function run()
     {
         if ($this->debugMode) {
             echo "Restricting crawl to $this->domain\n";
         }
+        
+        //loop across available items in the queue of pages to crawl
         while (!$this->queue->isEmpty()) {
+        	
+        	if (isset($this->limit) && ($this->counter >= $this->limit)) {
+        		break;
+        	}
+        	$this->counter++;
+        	
         	
         	//get a new url to crawl
             $url = $this->queue->pop();

@@ -6,9 +6,9 @@ class Queue
     
     public function push($url)
     {
-        if (!in_array($url, $this->alreadyVisited)) {
+        if (!isset($this->alreadyVisited[$url])) {
             $this->toVisit[] = $url;
-            $this->alreadyVisited[] = $url;
+            $this->alreadyVisited[$url] = true;
         }
     }
     
